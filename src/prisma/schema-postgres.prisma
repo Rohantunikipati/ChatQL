@@ -1,0 +1,127 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id            String          @id @default(cuid())
+    name          String?
+    email         String          @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+    // Optional for WebAuthn support
+    Authenticator Authenticator[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    FriendRequestSent     FriendRequest[] @relation("send_requests")
+    FriendRequestReceived FriendRequest[] @relation("received_requests")
+    Friendships           FriendShip[]    @relation("UserAsFriend1")
+    Friendships2          FriendShip[]    @relation("UserAsFriend2")
+    SentMessages          Messege[]       @relation("Send_Messege")
+    ReceivedMessages      Messege[]       @relation("Receiver_Messege")
+}
+
+enum Request_Status {
+    PENDING
+    REJECTED
+    ACCEPTED
+}
+
+model FriendRequest {
+    id                  String         @id @default(cuid())
+    request_sender_id   String
+    request_receiver_id String
+    createdAt           DateTime       @default(now())
+    status              Request_Status @default(PENDING)
+
+    request_sender   User @relation("send_requests", fields: [request_sender_id], references: [id])
+    request_receiver User @relation("received_requests", fields: [request_receiver_id], references: [id])
+
+    @@unique([request_sender_id, request_receiver_id])
+}
+
+model FriendShip {
+    id        String   @id @default(cuid())
+    user1_id  String
+    user2_id  String
+    createdAt DateTime @default(now())
+
+    user1 User @relation("UserAsFriend1", fields: [user1_id], references: [id])
+    user2 User @relation("UserAsFriend2", fields: [user2_id], references: [id])
+
+    @@unique([user1_id, user2_id])
+}
+
+model Messege {
+    id         String   @id @default(cuid())
+    senderId   String
+    receiverId String
+    content    String
+    createdAt  DateTime @default(now())
+
+    sender   User @relation("Send_Messege", fields: [senderId], references: [id])
+    receiver User @relation("Receiver_Messege", fields: [receiverId], references: [id])
+}
+
+model Account {
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@id([provider, providerAccountId])
+}
+
+model Session {
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+    identifier String
+    token      String
+    expires    DateTime
+
+    @@id([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+    credentialID         String  @unique
+    userId               String
+    providerAccountId    String
+    credentialPublicKey  String
+    counter              Int
+    credentialDeviceType String
+    credentialBackedUp   Boolean
+    transports           String?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@id([userId, credentialID])
+}
