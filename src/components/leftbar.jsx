@@ -17,6 +17,7 @@ import axios from "axios";
 import Image from "next/image";
 import { chat_id_formator } from "@/lib/helper";
 import { motion } from "framer-motion";
+import { Skeleton } from "./ui/skeleton";
 
 const Leftbar = () => {
   const { data: session, status } = useSession();
@@ -84,14 +85,33 @@ const Leftbar = () => {
             </React.Fragment>
           ))
         ) : (
-          <p>No friends found.</p>
+          <div className="w-full py-4 px-8 flex-col gap-4 items-center rounded-md transition-all duration-50 cursor-pointer">
+            <div className="w-full p-3 flex gap-4 items-center">
+              <Skeleton className=" w-10 h-10 rounded-full"></Skeleton>
+              <div>
+                <Skeleton className="h-4 w-[200px]"></Skeleton>
+              </div>
+            </div>
+            <div className="w-full p-3 flex gap-4 items-center">
+              <Skeleton className=" w-10 h-10 rounded-full"></Skeleton>
+              <div>
+                <Skeleton className="h-4 w-[200px]"></Skeleton>
+              </div>
+            </div>
+            <div className="w-full p-3 flex gap-4 items-center">
+              <Skeleton className=" w-10 h-10 rounded-full"></Skeleton>
+              <div>
+                <Skeleton className="h-4 w-[200px]"></Skeleton>
+              </div>
+            </div>
+          </div>
         )}
       </div>
       <Separator className=" mx-auto bg-[#0F172A]" />
       <div className="py-2 w-full h-[30%]">
         <Link href="/add">
           <Button variant="outline" className="w-[90%] my-2 mx-3">
-            <UserPlus className="w-4 h-4 mr-4" /> ADD FRIEND
+            <UserPlus className="w-4 h-4 mr-4" /> Add Friend
           </Button>
         </Link>
         <Link href="/request">
