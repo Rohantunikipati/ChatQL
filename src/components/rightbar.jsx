@@ -4,6 +4,11 @@ import { Separator } from "./ui/separator";
 import { RiNextjsFill, RiTailwindCssFill } from "react-icons/ri";
 import { SiPostgresql, SiPrisma, SiPusher } from "react-icons/si";
 import { BiLogoPostgresql } from "react-icons/bi";
+import { FaArrowRight } from "react-icons/fa";
+
+import Link from "next/link";
+import { Button } from "./ui/button";
+import { Github } from "lucide-react";
 
 const Rightbar = () => {
   return (
@@ -23,7 +28,15 @@ const Rightbar = () => {
             platform designed to communicate. Whether you're chatting with
             friends, family, or colleagues, ChatQl ensures a seamless, real-time
             experience. With the latest technologies powering the platform,
-            you'll enjoy fast, reliable, and engaging conversations every time.
+            you'll enjoy fast, reliable, and engaging conversations every time.{" "}
+            <Link href="https://sharp-halloumi-b84.notion.site/ChatQL-fb62b3a457634aa692653669c0ecbb9e">
+              <span className="text-blue-900 font-semibold inline-block  px-3 group">
+                <span className=" group-hover:underline transition-all duration-200">
+                  Documentation
+                </span>{" "}
+                <FaArrowRight className="inline-block -ml-2 -rotate-45 scale-50 group-hover:scale-75 group-hover:rotate-0 group-hover:ml-1 transition-all duration-200 font-light" />{" "}
+              </span>
+            </Link>
           </h1>
           <Separator />
           <div className="">
